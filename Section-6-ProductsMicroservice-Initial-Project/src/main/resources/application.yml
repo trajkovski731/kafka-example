@@ -1,0 +1,29 @@
+server:
+  ## It will start every instance on a random port
+  port: 51305
+
+spring:
+  ## Kafka settings ##
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092, localhost:9094
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      ## If we set this to all it means that all in sync kafka brokers needs to send acknowlegment to the producer,
+      ## if this is not the case then the message won't be written into the kafka broker
+      ## there is a minsync-replicas property on the topic and it is the number of how many replicas (including the leader) needs to respond with ACK so the message will be written
+      acks: all
+      ## How many times the producer to retry to send the message
+      #retries: 10 -> NOT RECOMMENDED by kafka documentation
+      properties:
+        delivery:
+          timeout:
+            ms: 120000 #max amount of time producer will wait for ack from all replicas after sending a message including the retry operation
+        #retry:
+          #backoff:
+            #ms: 5000 -> NOT RECOMMENDED by kafka documentation
+        linger:
+          ms: 0 #It will wait this amount of time and in that time it will collect messages and send them in a batch
+        request:
+          timeout:
+            ms: 30000 # It will wait for this amount of time for the broker to return ACK
