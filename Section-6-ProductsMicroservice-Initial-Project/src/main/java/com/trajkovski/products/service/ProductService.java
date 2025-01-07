@@ -40,7 +40,7 @@ public class ProductService {
 
         response.whenComplete((result, exception) -> {
             if (exception != null) {
-                LOGGER.error("Failed to send message", exception);
+                LOGGER.error("Failed to send message, error cause: ", exception);
             } else {
                 logKafkaMessageSendSuccess(result);
             }
